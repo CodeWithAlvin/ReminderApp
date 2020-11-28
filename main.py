@@ -2,7 +2,7 @@
 try :
 	import pandas as pd
 	from tkinter import *
-	import time
+	from datetime import datetime
 	from random import choice
 except:
 	print("Import Error please install Required Package")
@@ -43,4 +43,36 @@ class DisplayMessage:
 		b1=Button(self.root,text="Dismis",command=self.root.destroy)
 		b1.pack(pady=40)
 			
+
+class GetRecord:
+	def __init__(self):
+		self.Get()
+		self.Check()
 					
+	def Get(self):
+		self.data=pd.read_excel("Record.xlsx")
+
+	def Check(self):
+		for i in range(1):#len(self.data)):
+			
+			#Organizing Date
+			DateStamp=str(self.data["Date"][i]).split(" ")[0].split("-")
+			raw_year=DateStamp[0]
+			raw_month=DateStamp[1]
+			raw_date=DateStamp[2]
+			date=raw_date+raw_month+raw_year
+			
+			#Organizing Time
+			TimeStamp=str(self.data["Time"][1]).split(":")
+			raw_hrs=TimeStamp[0]
+			raw_min=TimeStamp[1]
+			time=raw_hrs+raw_min
+			
+			#full Stamp
+			Stamp=date+time
+				
+ 
+GetRecord()
+	    
+
+		   											

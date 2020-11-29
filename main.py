@@ -1,7 +1,7 @@
 # Imports there
 try :
-	import pandas as pd
-	from tkinter import *
+	import pandas as pd	
+	from tkinter import Tk,Canvas,Button
 	from datetime import datetime
 	from random import choice
 except:
@@ -10,7 +10,7 @@ except:
 
 #Display Screen On Call
 class DisplayMessage:
-	def __init__(self,title,message):
+	def __init__(self,title,time,message):
 		self.root=Tk()
 			
 		#Getting colours
@@ -19,7 +19,7 @@ class DisplayMessage:
 		
 		#Body of screen
 		self.ScreenEdits()
-		self.TopFrame(title,message)
+		self.TopFrame(title,time,message)
 		self.root.mainloop()
 	
 	#Screen Initial Sertings
@@ -29,20 +29,34 @@ class DisplayMessage:
 		self.root.geometry("1000x900")
 		
 	#Main message Creator in app
-	def TopFrame(self,title,message):
+	def TopFrame(self,title,time,message):
 		#main Canvas
 		c1=Canvas(self.root,width="1000",height="720",background="#f0fffc")
 		c1.pack()
 		
 		#message Title
 		c1.create_text(500,100,width=800,fill=self.colorPrimary,font="Times 12 italic bold",text=title)
+		
+		#message Time
+		c1.create_text(500,200,width=800,fill=self.colorPrimary,font="Times 5 italic bold",text=time)
 	
 		#mesaage Body
-		c1.create_text(500,300,width=800,fill=self.colorSecondry,font="Times 8 italic bold",text=message)
+		c1.create_text(500,400,width=800,fill=self.colorSecondry,font="Times 8 italic bold",text=message)
 	
 		b1=Button(self.root,text="Dismis",command=self.root.destroy)
 		b1.pack(pady=40)
 			
+class RunMessage:
+	def __init__(self,i,data):
+		#Getting Data To send		
+		Title=data["TITLE"][i]
+		Time=data["TIME"][i]
+		Message=data["DESCRIPTION"][i]
+		#Running Screen
+		DisplayMessage(Title,Time,Message)
+
+
+
 
 class GetRecord:
 	def __init__(self):
@@ -52,27 +66,39 @@ class GetRecord:
 	def Get(self):
 		self.data=pd.read_excel("Record.xlsx")
 
-	def Check(self):
-		for i in range(1):#len(self.data)):
-			
-			#Organizing Date
-			DateStamp=str(self.data["Date"][i]).split(" ")[0].split("-")
+	def Hackdata(self,DateStamp,TimeStamp):
+		#Organizing Date
 			raw_year=DateStamp[0]
 			raw_month=DateStamp[1]
 			raw_date=DateStamp[2]
-			date=raw_date+raw_month+raw_year
+			date=raw_year+raw_month+raw_date
 			
-			#Organizing Time
-			TimeStamp=str(self.data["Time"][1]).split(":")
+			#Organizing Time			
 			raw_hrs=TimeStamp[0]
 			raw_min=TimeStamp[1]
 			time=raw_hrs+raw_min
 			
 			#full Stamp
-			Stamp=date+time
-				
- 
-GetRecord()
+			return(date+time)
+			
+	def Check(self):
+		for i in range(len(self.data)):
+			DateStamp=str(self.data["DATE"][i]).split(" ")[0].split("-")
+			TimeStamp=str(self.data["TIME"][i]).split(":")
+			
+			CurrentDate=str(datetime.now()).split(" ")[0].split("-")
+			CurrentTime=str(datetime.now()).split(" ")[1].split(":")
+			
+			recordTime=self.Hackdata(DateStamp,TimeStamp)
+			myTime=self.Hackdata(CurrentDate,CurrentTime)
+			
+			if recordTime==myTime:
+				RunMessage(i,self.data)
+      
+                       
+#Running App  
+while True:
+	GetRecord()
 	    
 
 		   											

@@ -91,9 +91,12 @@ class GetRecord:
 			
 			recordTime=self.Hackdata(DateStamp,TimeStamp)
 			myTime=self.Hackdata(CurrentDate,CurrentTime)
-			
+					
 			if recordTime==myTime:
 				RunMessage(i,self.data)
+	
+				NewDf=self.data.drop(i)
+				NewDf.to_excel("Record.xlsx",index=False)
       
                        
 #Running App  
